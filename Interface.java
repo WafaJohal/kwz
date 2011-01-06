@@ -1,6 +1,5 @@
 
 
-import javax.swing.JPanel;
 import javax.swing.*;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -11,6 +10,8 @@ import java.awt.Panel;
 import java.awt.GridBagLayout;
 import java.awt.Color;
 import javax.swing.JMenuItem;
+import javax.swing.filechooser.FileFilter;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
@@ -98,9 +99,12 @@ public class Interface {
 /*=================================================================================================*/
 	class OpenAction implements ActionListener{
 		public void actionPerformed(ActionEvent ae){
-			int retval = jFileChooser.showOpenDialog(null);
-			if(retval==jFileChooser.APPROVE_OPTION){
-				File file = jFileChooser.getSelectedFile();
+			JFileChooser chooser = new JFileChooser();
+			chooser.setApproveButtonText("Choose an image...");
+			chooser.addChoosableFileFilter(new ImageFilter());
+			int retval = chooser.showOpenDialog(null);
+			if(retval==chooser.APPROVE_OPTION){
+				File file = chooser.getSelectedFile();
 				try {
 					img = ImageIO.read(file);
 					jcontPanel.repaint();
@@ -120,4 +124,31 @@ public class Interface {
 				g2.drawImage(img, null, 0, 0);
 		}	
 	}
+
+	/* ImageFilter.java is used by FileChooserDemo2.java. */
+ class ImageFilter extends FileFilter {
+	//Accept all directories and all gif, jpg, tiff, or png files.
+	public boolean accept(File f) {
+		if (f.isDirectory()) {
+			return true;
+	}
+		String extension = f.getName().toLowerCase();
+	if (extension != null) {
+	if (extension.endsWith("png") ||
+	extension.endsWith("png") ||
+	extension.endsWith("pnm") ||
+	extension.endsWith("jpg")) {
+	return true;
+	} else {
+	return false;
+	}
+	}
+	return false;
+	}
+	//The description of this filter
+	public String getDescription() {
+	return "Just Images";
+	}
+	}
+
 }
