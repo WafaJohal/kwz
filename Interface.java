@@ -32,6 +32,7 @@ public class Interface {
 	private BufferedImage img = null;
 	private JFileChooser jFileChooser = new JFileChooser();
 	private ContentPanel jcontPanel = new ContentPanel();
+
 /*=================================================================================================*/
 	public Interface(){
 		this.getJFrame();
@@ -96,12 +97,12 @@ public class Interface {
 	
 	
 	
-/*=================================================================================================*/
+/*============================Open Image Action Class=====================================================================*/
 	class OpenAction implements ActionListener{
 		public void actionPerformed(ActionEvent ae){
 			JFileChooser chooser = new JFileChooser();
 			chooser.setApproveButtonText("Choose an image...");
-			chooser.addChoosableFileFilter(new ImageFilter());
+			chooser.setFileFilter(new ImageFilter());
 			int retval = chooser.showOpenDialog(null);
 			if(retval==chooser.APPROVE_OPTION){
 				File file = chooser.getSelectedFile();
@@ -134,7 +135,7 @@ public class Interface {
 	}
 		String extension = f.getName().toLowerCase();
 	if (extension != null) {
-	if (extension.endsWith("png") ||
+	if (extension.endsWith("gif") ||
 	extension.endsWith("png") ||
 	extension.endsWith("pnm") ||
 	extension.endsWith("jpg")) {
@@ -150,5 +151,7 @@ public class Interface {
 	return "Just Images";
 	}
 	}
-
+ public static void  main(String[] args){
+		Interface in1 = new Interface();
+	}
 }
