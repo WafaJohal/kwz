@@ -1,4 +1,3 @@
-
 import javax.swing.*;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -52,7 +51,6 @@ public class Interface {
 	private JButton jButtonFusion = null;
 	private PrintP jLabelPrintPix = null;
 
-
 	// Menu
 	private JMenuBar jJMenuBar = null;
 	private JMenu fileMenu = null;
@@ -64,24 +62,22 @@ public class Interface {
 	private BufferedImage img = null;
 	private JFileChooser jFileChooser = new JFileChooser();
 	private String filename; // image's file name
-	
-	/*Histograms Var*/
+
+	/* Histograms Var */
 	private JFrame histoFrame = new JFrame();
 	private JTabbedPane tbhisto = new JTabbedPane();
 	private HistoPanel histoColor = new HistoPanel(Color.BLACK);
 	private HistoPanel histoRed = new HistoPanel(Color.RED);
 	private HistoPanel histoGreen = new HistoPanel(Color.GREEN);
 	private HistoPanel histoBlue = new HistoPanel(Color.BLUE);
-	
-	
 
 	/******************************** CLASS' CONSTRUCTOR ***************************************************************************/
 	public Interface() {
 		this.getJFrame();
 	}
 
-	/*******************************COMPONENTS' GETTERS *****************************************************************************/
-	/**JFRAME**/
+	/******************************* COMPONENTS' GETTERS *****************************************************************************/
+	/** JFRAME **/
 	private JFrame getJFrame() {
 		if (jFrame == null) {
 			jFrame = new JFrame();
@@ -94,7 +90,8 @@ public class Interface {
 		}
 		return jFrame;
 	}
-	/**CONTENT PANEL**/
+
+	/** CONTENT PANEL **/
 	private JPanel getJContentPane() {
 		if (jContentPane == null) {
 			jContentPane = new JPanel();
@@ -105,28 +102,33 @@ public class Interface {
 		}
 		return jContentPane;
 	}
-	/**SCROLL PANEL**/
-	private JScrollPane getJScrollPane(){
-		if(jscrollpane == null){
-		jscrollpane = new JScrollPane(getJImagePane());	
-		jscrollpane.setWheelScrollingEnabled(true);
-	
-	jscrollpane.setVerticalScrollBarPolicy( JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-		jscrollpane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+
+	/** SCROLL PANEL **/
+	private JScrollPane getJScrollPane() {
+		if (jscrollpane == null) {
+			jscrollpane = new JScrollPane(getJImagePane());
+			
+			jscrollpane.setWheelScrollingEnabled(true);
+
+			jscrollpane
+					.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+			jscrollpane
+					.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
 		}
 		return jscrollpane;
 	}
-	/**IMAGE PANEL**/
+
+	/** IMAGE PANEL **/
 	private ImagePanel getJImagePane() {
 		if (jImagePane == null) {
 			jImagePane = new ImagePanel();
 			jImagePane.setBackground(Color.LIGHT_GRAY);
-			histoFrame.setPreferredSize(new Dimension(300,200));
+			histoFrame.setPreferredSize(new Dimension(300, 200));
 		}
 		return jImagePane;
 	}
 
-	/**TOOL PANEL**/
+	/** TOOL PANEL **/
 	private JPanel getJToolPanel() {
 		if (jToolPane == null) {
 			jToolPane = new JPanel();
@@ -144,56 +146,60 @@ public class Interface {
 		return jToolPane;
 	}
 
-	/**TOOL'S BUTTONS**/
-	//CROP BUTTON
-	private JButton getJButtonCrop() {
-		if (jButtonCrop == null) {
-			jButtonCrop = new JButton(new ImageIcon("icon/crop.png"));
-			jButtonCrop.setSize(20, 20);
-			jButtonCrop.addActionListener(new ActionListener(){
-				public void actionPerformed(ActionEvent e){
-					jContentPane.repaint();
-				}
-			});
-		}
-		return jButtonCrop;
-	}
-	//PRINT PIXEL COLOR BUTTON
+	/** TOOL'S BUTTONS **/
+	// CROP BUTTON
+    private JButton getJButtonCrop() {
+        if (jButtonCrop == null) {
+                jButtonCrop = new JButton(new ImageIcon("icon/crop.png"));
+                jButtonCrop.setSize(20, 20);
+                jButtonCrop.addActionListener(new ActionListener(){
+                        public void actionPerformed(ActionEvent e){
+                                if(jImagePane.getIsGray()==false)
+                                        img = jImagePane.getColorImage();
+                                jContentPane.repaint();
+                        }
+                });
+        }
+        return jButtonCrop;
+}
+
+	// PRINT PIXEL COLOR BUTTON
 	private JButton getJButtonPrintPix() {
 		if (jButtonPrintPix == null) {
 			jButtonPrintPix = new JButton(new ImageIcon("icon/pipette.png"));
 			jButtonPrintPix.setSize(20, 20);
-			jButtonPrintPix.addActionListener(new ActionListener(){
-				public void actionPerformed(ActionEvent e){
-					
-					if(jLabelPrintPix.getIsPrinting()){
-					jLabelPrintPix = new PrintP(jImagePane);
-				}
-				jLabelPrintPix.setIsPrinting(!(jLabelPrintPix.getIsPrinting()));
-				System.out.println(jLabelPrintPix.getIsPrinting());	
-				
+			jButtonPrintPix.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+
+					if (jLabelPrintPix.getIsPrinting()) {
+						jLabelPrintPix = new PrintP(jImagePane);
+					}
+					jLabelPrintPix.setIsPrinting(!(jLabelPrintPix
+							.getIsPrinting()));
+					System.out.println(jLabelPrintPix.getIsPrinting());
+
 				}
 			});
 		}
 		return jButtonPrintPix;
 	}
 
-	//DISPLAY HISTOGRAMS BUTTON
+	// DISPLAY HISTOGRAMS BUTTON
 	private JButton getJButtonHisto() {
 		if (jButtonHisto == null) {
 			jButtonHisto = new JButton(new ImageIcon("icon/histo.gif"));
 			jButtonHisto.setSize(30, 30);
-			jButtonHisto.addActionListener(new ActionListener(){
-				public void actionPerformed(ActionEvent e){
-					int count[] = countRed();
+			jButtonHisto.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
 					histoColor.showHistogram(countColor());
 					histoRed.showHistogram(countRed());
 					histoBlue.showHistogram(countBlue());
 					histoGreen.showHistogram(countGreen());
+					histoFrame.setSize(800, 400);
 					histoFrame.setVisible(true);
 				}
 			});
-			tbhisto.setPreferredSize(new Dimension(300,200));
+			tbhisto.setPreferredSize(new Dimension(300, 200));
 			tbhisto.addTab("Color Histogram", histoColor);
 			tbhisto.addTab("Red scale", histoRed);
 			tbhisto.addTab("Green scale", histoGreen);
@@ -203,14 +209,21 @@ public class Interface {
 		return jButtonHisto;
 	}
 
-	//COLOR IN GRAY BUTTON
-	private JButton getJButtonGray() {
-		if (jButtonGray == null) {
-			jButtonGray = new JButton(new ImageIcon("icon/gray.png"));
-			jButtonGray.setSize(20, 20);
-		}
-		return jButtonGray;
-	}
+	// COLOR IN GRAY BUTTON
+	  private JButton getJButtonGray() {
+          if (jButtonGray == null) {
+                  jButtonGray = new JButton(new ImageIcon("icon/gray.png"));
+                  jButtonGray.setSize(20, 20);
+                  jButtonGray.addActionListener(new ActionListener(){
+                          public void actionPerformed(ActionEvent e){
+                                  jImagePane.setIsGray(true);
+                                  img = jImagePane.getColorImage();
+                                  jContentPane.repaint();
+                          }
+                  });
+          }
+          return jButtonGray;
+  }
 
 	//
 	private JButton getJButtonBlur() {
@@ -228,10 +241,10 @@ public class Interface {
 		}
 		return jButtonFusion;
 	}
-	
-	private PrintP getLbPrintPix(){
-		if(jLabelPrintPix == null){
-			jLabelPrintPix =  new PrintP(jImagePane);	
+
+	private PrintP getLbPrintPix() {
+		if (jLabelPrintPix == null) {
+			jLabelPrintPix = new PrintP(jImagePane);
 			jLabelPrintPix.setIsPrinting(false);
 		}
 		return jLabelPrintPix;
@@ -294,11 +307,13 @@ public class Interface {
 				File file = jFileChooser.getSelectedFile();
 				try {
 					img = ImageIO.read(file);
-					jImagePane.setImage(img);
+					jImagePane.setColorImage(img);
 					jContentPane.repaint();
 				} catch (IOException e) {
 				}
+			jFrame.setSize(getJImagePane().getColorImage().getWidth()+jToolPane.getWidth(),getJImagePane().getColorImage().getHeight());
 			}
+			
 		}
 	}
 
@@ -325,6 +340,7 @@ public class Interface {
 		} else {
 			System.out.println("Error: filename must end in .jpg or .png");
 		}
+		
 	}
 
 	// /////////////////////////////////////////////////////////////////////////////////////////
@@ -343,6 +359,7 @@ public class Interface {
 				save(chooser.getDirectory() + File.separator
 						+ chooser.getFile());
 			}
+			
 		}
 	}
 
@@ -374,62 +391,67 @@ public class Interface {
 			return "Just Images";
 		}
 	}
-private int[] countRed(){
-	int[] count = new int[256];
-	int x, y;
-	BufferedImage image = jImagePane.getImage();
-	for (x = 0 ; x<image.getWidth(); x++){
-		for(y = 0 ; y< image.getHeight(); y++){
-			int red = (new Color(image.getRGB(x, y))).getRed();
-			if(red<=255 && red>=0)
-			count[red]++;
+
+	private int[] countRed() {
+		int[] count = new int[256];
+		int x, y;
+		BufferedImage image = jImagePane.getColorImage();
+		for (x = 0; x < image.getWidth(); x++) {
+			for (y = 0; y < image.getHeight(); y++) {
+				int red = (new Color(image.getRGB(x, y))).getRed();
+				if (red <= 255 && red >= 0)
+					count[red]++;
 			}
 		}
-	return count;
-}
-private int[] countBlue(){
-	int[] count = new int[256];
-	int x, y;
-	BufferedImage image = jImagePane.getImage();
-	for (x = 0 ; x<image.getWidth(); x++){
-		for(y = 0 ; y< image.getHeight(); y++){
-			int blue = (new Color(image.getRGB(x, y))).getBlue();
-			if(blue<=255 && blue>=0)
-			count[blue]++;
+		return count;
+	}
+
+	private int[] countBlue() {
+		int[] count = new int[256];
+		int x, y;
+		BufferedImage image = jImagePane.getColorImage();
+		for (x = 0; x < image.getWidth(); x++) {
+			for (y = 0; y < image.getHeight(); y++) {
+				int blue = (new Color(image.getRGB(x, y))).getBlue();
+				if (blue <= 255 && blue >= 0)
+					count[blue]++;
 			}
 		}
-	return count;
-}
-private int[] countGreen(){
-	int[] count = new int[256];
-	int x, y;
-	BufferedImage image = jImagePane.getImage();
-	for (x = 0 ; x<image.getWidth(); x++){
-		for(y = 0 ; y< image.getHeight(); y++){
-			int green = (new Color(image.getRGB(x, y))).getGreen();
-			if(green<=255 && green>=0)
-			count[green]++;
+		return count;
+	}
+
+	private int[] countGreen() {
+		int[] count = new int[256];
+		int x, y;
+		BufferedImage image = jImagePane.getColorImage();
+		for (x = 0; x < image.getWidth(); x++) {
+			for (y = 0; y < image.getHeight(); y++) {
+				int green = (new Color(image.getRGB(x, y))).getGreen();
+				if (green <= 255 && green >= 0)
+					count[green]++;
 			}
 		}
-	return count;
-}
-	
-private int[] countColor(){
-	int[] count = new int[256];
-	int x, y;
-	BufferedImage image = jImagePane.getImage();
-	for (x = 0 ; x<image.getWidth(); x++){
-		for(y = 0 ; y< image.getHeight(); y++){
-			int color = (new Color(image.getRGB(x, y)).getRed())/3 +(new Color(image.getRGB(x, y)).getBlue())/3+(new Color(image.getRGB(x, y)).getGreen())/3;
-			if(color<=255 && color>=0)
-			count[color]++;
+		return count;
+	}
+
+	private int[] countColor() {
+		int[] count = new int[256];
+		int x, y;
+		BufferedImage image = jImagePane.getColorImage();
+		for (x = 0; x < image.getWidth(); x++) {
+			for (y = 0; y < image.getHeight(); y++) {
+				int color = (new Color(image.getRGB(x, y)).getRed()) / 3
+						+ (new Color(image.getRGB(x, y)).getBlue()) / 3
+						+ (new Color(image.getRGB(x, y)).getGreen()) / 3;
+				if (color <= 255 && color >= 0)
+					count[color]++;
 			}
 		}
-	return count;
-}
+		return count;
+	}
 
 	public static void main(String[] args) {
 		Interface in1 = new Interface();
-		
+
 	}
 }

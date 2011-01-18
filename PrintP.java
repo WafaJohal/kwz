@@ -137,7 +137,7 @@ MouseMotionListener  {
 		if(isprinting){
 			xcoord = evt.getX();
 			ycoord = evt.getY();
-			setColor(new Color(imagep.getImage().getRGB(xcoord, ycoord)));
+			setColor(new Color(imagep.getColorImage().getRGB(xcoord, ycoord)));
 		}
 		else ;
 	}
