@@ -156,6 +156,7 @@ public class Interface {
                         public void actionPerformed(ActionEvent e){
                                 if(jImagePane.getIsGray()==false)
                                         img = jImagePane.getColorImage();
+                                else{ img=jImagePane.getGrayImage();}
                                 jContentPane.repaint();
                         }
                 });
@@ -191,10 +192,17 @@ public class Interface {
 			jButtonHisto.setSize(30, 30);
 			jButtonHisto.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					histoColor.showHistogram(countColor());
-					histoRed.showHistogram(countRed());
-					histoBlue.showHistogram(countBlue());
-					histoGreen.showHistogram(countGreen());
+					//set the image in the histos
+					histoColor.setImage(jImagePane.getColorImage());
+					histoRed.setImage(jImagePane.getColorImage());
+					histoBlue.setImage(jImagePane.getColorImage());
+					histoGreen.setImage(jImagePane.getColorImage());
+				
+					//build the histogramms
+					histoColor.showHistogram(histoColor.count(Color.BLACK));
+					histoRed.showHistogram(histoRed.count(Color.RED));
+					histoBlue.showHistogram(histoBlue.count(Color.blue));
+					histoGreen.showHistogram(histoGreen.count(Color.GREEN));
 					histoFrame.setSize(800, 400);
 					histoFrame.setVisible(true);
 				}
@@ -216,7 +224,7 @@ public class Interface {
                   jButtonGray.setSize(20, 20);
                   jButtonGray.addActionListener(new ActionListener(){
                           public void actionPerformed(ActionEvent e){
-                                  jImagePane.setIsGray(true);
+                                  jImagePane.setIsGray(!jImagePane.getIsGray());
                                   img = jImagePane.getColorImage();
                                   jContentPane.repaint();
                           }
@@ -392,63 +400,7 @@ public class Interface {
 		}
 	}
 
-	private int[] countRed() {
-		int[] count = new int[256];
-		int x, y;
-		BufferedImage image = jImagePane.getColorImage();
-		for (x = 0; x < image.getWidth(); x++) {
-			for (y = 0; y < image.getHeight(); y++) {
-				int red = (new Color(image.getRGB(x, y))).getRed();
-				if (red <= 255 && red >= 0)
-					count[red]++;
-			}
-		}
-		return count;
-	}
-
-	private int[] countBlue() {
-		int[] count = new int[256];
-		int x, y;
-		BufferedImage image = jImagePane.getColorImage();
-		for (x = 0; x < image.getWidth(); x++) {
-			for (y = 0; y < image.getHeight(); y++) {
-				int blue = (new Color(image.getRGB(x, y))).getBlue();
-				if (blue <= 255 && blue >= 0)
-					count[blue]++;
-			}
-		}
-		return count;
-	}
-
-	private int[] countGreen() {
-		int[] count = new int[256];
-		int x, y;
-		BufferedImage image = jImagePane.getColorImage();
-		for (x = 0; x < image.getWidth(); x++) {
-			for (y = 0; y < image.getHeight(); y++) {
-				int green = (new Color(image.getRGB(x, y))).getGreen();
-				if (green <= 255 && green >= 0)
-					count[green]++;
-			}
-		}
-		return count;
-	}
-
-	private int[] countColor() {
-		int[] count = new int[256];
-		int x, y;
-		BufferedImage image = jImagePane.getColorImage();
-		for (x = 0; x < image.getWidth(); x++) {
-			for (y = 0; y < image.getHeight(); y++) {
-				int color = (new Color(image.getRGB(x, y)).getRed()) / 3
-						+ (new Color(image.getRGB(x, y)).getBlue()) / 3
-						+ (new Color(image.getRGB(x, y)).getGreen()) / 3;
-				if (color <= 255 && color >= 0)
-					count[color]++;
-			}
-		}
-		return count;
-	}
+	
 
 	public static void main(String[] args) {
 		Interface in1 = new Interface();
