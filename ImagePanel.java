@@ -1,4 +1,3 @@
-
 import java.awt.Color;
 import javax.imageio.ImageIO;
 import java.awt.Graphics;
@@ -14,9 +13,9 @@ import java.io.File;
 import java.io.IOException;
 
 public class ImagePanel extends JPanel implements MouseListener, MouseMotionListener {
+                private BufferedImage currentImage;     
                 private BufferedImage colorImage;
                 private BufferedImage grayImage;
-                private BufferedImage currentImage = colorImage;
                 private int x1,x2,y1,y2;
                 private boolean isCropping;
                 private boolean isGray = false;
@@ -25,10 +24,18 @@ public class ImagePanel extends JPanel implements MouseListener, MouseMotionList
                 public ImagePanel(){
                         this.addMouseListener(this);
                     this.addMouseMotionListener(this);
-                   
                 }
                 /*==========================SET AND GET IMAGE==========================*
                  *====================================================================*/
+                public void setCurrentImage(BufferedImage img)
+                {
+                       this.currentImage = img;
+                       this.setColorImage(currentImage);
+                }
+                public BufferedImage getCurrentImage()
+                {
+                       return this.currentImage;
+                }
                 public void setColorImage(BufferedImage img)
                 {
                        this.colorImage = img;
@@ -69,7 +76,12 @@ public class ImagePanel extends JPanel implements MouseListener, MouseMotionList
                 public void paintComponent(Graphics g) {
                         super.paintComponents(g);
                         Graphics2D g2 = (Graphics2D)g;
-                                g2.drawImage(colorImage, null, 0, 0);
+                        g2.drawImage(colorImage, null, 0, 0);
+                        if(isGray)
+                        {
+                                        getGrayScale();
+                                        g2.drawImage(grayImage, null, 0, 0);
+                        }
                         if (isCropping)
                       {
                                 
@@ -81,11 +93,7 @@ public class ImagePanel extends JPanel implements MouseListener, MouseMotionList
                                   g2.setColor(Color.WHITE);
                           g2.drawRect(Math.min(x1, x2), Math.min(y1, y2), Math.max(x1, x2), Math.max(y1, y2));
                       }
-                        if(isGray)
-                        {
-                                getGrayScale();
-                                g2.drawImage(grayImage, null, 0, 0);
-                        }
+                        
                         
                 }
                 /*===============================================MOUSE EVENT==============================================================================================
@@ -150,15 +158,8 @@ public class ImagePanel extends JPanel implements MouseListener, MouseMotionList
                     // This is the method a wrote in the other snipped
                         if( x1 != 0 && y1!= 0 && x2< colorImage.getWidth() && y2<colorImage.getHeight())
                         {
-                                if(!isGray)
-                                {
                                         BufferedImage cropped = crop(colorImage, new Rectangle(Math.min(x1, x2), Math.min(y1, y2), Math.max(x1, x2), Math.max(y1, y2)));
                                         this.colorImage = cropped;
-                                }
-                                else{
-                                BufferedImage cropped = crop(grayImage, new Rectangle(Math.min(x1, x2), Math.min(y1, y2), Math.max(x1, x2), Math.max(y1, y2)));
-                                this.grayImage = cropped;
-                                }
                         }
                 }
                 /*==================================================CROP IMAGE========================================================================================================================================
@@ -192,5 +193,3 @@ public class ImagePanel extends JPanel implements MouseListener, MouseMotionList
                                 }
                 }
 }
-
-	

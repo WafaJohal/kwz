@@ -148,15 +148,13 @@ public class Interface {
 
 	/** TOOL'S BUTTONS **/
 	// CROP BUTTON
-    private JButton getJButtonCrop() {
+	private JButton getJButtonCrop() {
         if (jButtonCrop == null) {
                 jButtonCrop = new JButton(new ImageIcon("icon/crop.png"));
                 jButtonCrop.setSize(20, 20);
                 jButtonCrop.addActionListener(new ActionListener(){
                         public void actionPerformed(ActionEvent e){
-                                if(jImagePane.getIsGray()==false)
                                         img = jImagePane.getColorImage();
-                                else{ img=jImagePane.getGrayImage();}
                                 jContentPane.repaint();
                         }
                 });
@@ -218,20 +216,20 @@ public class Interface {
 	}
 
 	// COLOR IN GRAY BUTTON
-	  private JButton getJButtonGray() {
-          if (jButtonGray == null) {
-                  jButtonGray = new JButton(new ImageIcon("icon/gray.png"));
-                  jButtonGray.setSize(20, 20);
-                  jButtonGray.addActionListener(new ActionListener(){
-                          public void actionPerformed(ActionEvent e){
-                                  jImagePane.setIsGray(!jImagePane.getIsGray());
-                                  img = jImagePane.getColorImage();
-                                  jContentPane.repaint();
-                          }
-                  });
-          }
-          return jButtonGray;
-  }
+	 private JButton getJButtonGray() {
+         if (jButtonGray == null) {
+                 jButtonGray = new JButton(new ImageIcon("icon/gray.png"));
+                 jButtonGray.setSize(20, 20);
+                 jButtonGray.addActionListener(new ActionListener(){
+                         public void actionPerformed(ActionEvent e){
+                                 jImagePane.setIsGray(true);
+                                 img = jImagePane.getColorImage();
+                                 jContentPane.repaint();
+                         }
+                 });
+         }
+         return jButtonGray;
+ }
 
 	//
 	private JButton getJButtonBlur() {
