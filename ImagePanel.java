@@ -9,8 +9,7 @@ import java.awt.image.BufferedImage;
 import javax.swing.JPanel;
 import java.awt.BasicStroke;
 import java.awt.image.WritableRaster;
-import java.io.File;
-import java.io.IOException;
+
 
 public class ImagePanel extends JPanel implements MouseListener, MouseMotionListener {
                 private BufferedImage currentImage;     
@@ -192,4 +191,5 @@ public class ImagePanel extends JPanel implements MouseListener, MouseMotionList
                                         colorImage.setRGB(i,j,newRGB);
                                 }
                 }
+                
 }
