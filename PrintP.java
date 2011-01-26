@@ -11,6 +11,9 @@ import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import java.awt.FlowLayout;
+import java.awt.GridBagLayout;
+import java.awt.GridBagConstraints;
 
 public class PrintP extends JPanel implements MouseListener,
 		MouseMotionListener {
@@ -20,6 +23,7 @@ public class PrintP extends JPanel implements MouseListener,
 	JPanel jpRGB;// contains the colors information for the RGB
 	JPanel jpYUV;// contains the colors information for the YUV
 
+	JLabel jlcolorTitle; 
 	JLabel jlRGB;// text "RGB"
 	JLabel jlRed;// value for Red
 	JLabel jlGreen; // value for Blue
@@ -30,6 +34,7 @@ public class PrintP extends JPanel implements MouseListener,
 	JLabel jlU; // value for Blue
 	JLabel jlV;// value for Green
 
+	JLabel jlcoordTitle; 
 	JLabel jlx;// text "RGB"
 	JLabel jlxcoord;// value for Red
 	JLabel jly; // value for Blue
@@ -68,22 +73,43 @@ public class PrintP extends JPanel implements MouseListener,
 
 	/*************** INIT() **************************************/
 	public void init() {
-		this.setLayout(new GridLayout(1,4, 10, 10));
 		
-		this.setBackground(Color.LIGHT_GRAY);
-		this.setPreferredSize(new Dimension(500, 50));
+		GridLayout gridLayout = new GridLayout();
+		gridLayout.setRows(1);
+		gridLayout.setHgap(200);
+		gridLayout.setVgap(20);
+		gridLayout.setColumns(4);
+		JPanel jptit = new JPanel(new BorderLayout(20,20));
+		jptit.setBackground(Color.gray);
+		this.setLayout(new BorderLayout());
+		this.jlcoordTitle = new JLabel("Coordinates");
+		jlcoordTitle.setForeground(new Color(204, 204, 204));
+		this.jlcolorTitle = new JLabel("Colors");
+		jlcolorTitle.setForeground(new Color(204, 204, 204));
+		jptit.setLayout(gridLayout);
+		jptit.add(jlcoordTitle, null);
+		jptit.add(jlcolorTitle, null);
+		this.add(jptit, BorderLayout.NORTH);
+		
+		JPanel jp1 = new JPanel(new GridLayout(1,4, 10, 10));
+		jp1.setBackground(Color.orange);
+		jp1.setPreferredSize(new Dimension(500, 50));
 		this.jpcolor = new JPanel();
 		this.jpcolor.setSize(this.getWidth(), this.getHeight() / 4);
-		this.jpcolor.setBorder(BorderFactory.createLineBorder(Color.black));
+		this.jpcolor.setBorder(BorderFactory.createLineBorder(Color.black, 1));
 
+		jpcolor.setBackground(new Color(255, 255, 153));
 		this.jpRGB = new JPanel();
 		this.jpYUV = new JPanel();
 
+		
 		this.jlYUV = new JLabel("YUV");
 		this.jlRGB = new JLabel("RGB");
 
 		jpYUV.setLayout(new BoxLayout(jpYUV, BoxLayout.PAGE_AXIS));
+		jpYUV.setBackground(new Color(255, 255, 153));
 		jpRGB.setLayout(new BoxLayout(jpRGB, BoxLayout.PAGE_AXIS));
+		jpRGB.setBackground(new Color(255, 255, 153));
 		this.jlRed = new JLabel();
 		this.jlGreen = new JLabel();
 		this.jlBlue = new JLabel();
@@ -97,10 +123,13 @@ public class PrintP extends JPanel implements MouseListener,
 		jlx = new JLabel();
 		jly = new JLabel();
 		jlxcoord = new JLabel();
+		jlxcoord.setBackground(new Color(255, 255, 153));
 		jlycoord = new JLabel();
 		jlx.setText("x :");
 		jly.setText("y :");
+		jly.setBackground(new Color(204, 255, 153));
 		jp.setLayout(new GridLayout(2, 4));
+		jp.setBackground(Color.orange);
 		jp.add(jlx);
 		jp.add(new JLabel());
 		jp.add(jly);
@@ -108,7 +137,7 @@ public class PrintP extends JPanel implements MouseListener,
 		jp.add(jlxcoord);
 		jp.add(new JLabel());
 		jp.add(jlycoord);
-		this.add(jp);
+		jp1.add(jp);
 
 		jpRGB.add(jlRGB, BorderLayout.NORTH);
 		jpRGB.add(jlRed, BorderLayout.CENTER);
@@ -119,9 +148,10 @@ public class PrintP extends JPanel implements MouseListener,
 		jpYUV.add(jlU, BorderLayout.CENTER);
 		jpYUV.add(jlV, BorderLayout.CENTER);
 
-		this.add(jpcolor);
-		this.add(jpRGB);
-		this.add(jpYUV);
+		jp1.add(jpcolor);
+		jp1.add(jpRGB);
+		jp1.add(jpYUV);
+		this.add(jp1);
 	}
 
 	@Override
@@ -220,4 +250,5 @@ public class PrintP extends JPanel implements MouseListener,
 		return this.ycoord;
 
 	}
+	
 }

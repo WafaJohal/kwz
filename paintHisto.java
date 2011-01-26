@@ -30,7 +30,7 @@ class paintHisto extends JPanel {
 			int maxCount = 0;
 			for (int i = 0; i < this.count.length; i++)
 				if (maxCount < this.count[i])
-					maxCount = this.count[i];
+					maxCount = (int)this.count[i];
 
 			int x = 20;
 
@@ -42,15 +42,22 @@ class paintHisto extends JPanel {
 				g.fillRect(x, height - 45 - barHeight, individualWidth,
 						barHeight);
 
-				if ((i % 10) == 0)
+				if (!((i % 10) == 0) && ((i%5) ==0))
 					g.drawString(i + "", x, height - 30);
-
+				if(i == 0)
+					g.drawString(i+ "", x, height -30);
 				x += interval;
 
 			}
 			g.setColor(Color.BLACK);
-			g.drawLine(10, height - 45, width - (width / 10), height - 45);
+			g.drawLine(10, height - 45, width - 10, height - 45);
 
+		}
+		public void repaint(int[] count, Color c){
+			this.count = count;
+			this.color = c;
+			super.repaint();
+			
 		}
 
 		public Dimension getPreferredSize() {

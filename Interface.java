@@ -5,6 +5,7 @@ import javax.swing.JFrame;
 
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
+import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
 
 
@@ -15,9 +16,18 @@ import javax.swing.filechooser.FileFilter;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.awt.Color;
+import java.awt.SystemColor;
+import java.awt.event.KeyEvent;
+import javax.swing.JScrollPane;
+import javax.swing.BorderFactory;
+import javax.swing.border.SoftBevelBorder;
+import java.awt.Font;
 
 public class Interface {
 
@@ -35,6 +45,7 @@ public class Interface {
 	// Tools Panel component of the Main Frame in the jContentPane
 	private JButton jbTool = null;
 	private JPanel jToolPane = null;
+	private PrintP jLabelPrintPix = null;
 
 	// Tools'Panel Components
 	
@@ -44,7 +55,7 @@ public class Interface {
 	private JButton jButtonGray = null;
 	private JButton jButtonBlur = null;
 	private JButton jButtonFusion = null;
-	private PrintP jLabelPrintPix = null;
+	private JButton jButtonResize = null;
 	private JButton jbGradient = null;
 
 
@@ -54,6 +65,8 @@ public class Interface {
 	private JMenu helpMenu = null;
 	private JMenuItem jMenuItem = null;
 	private JMenuItem jMenuItem1 = null;
+	private JMenuItem jMenuItemAbout = null;
+	
 
 	// Image variables
 	private BufferedImage img = null;
@@ -62,11 +75,8 @@ public class Interface {
 
 	/* Histograms Var */
 	private HistoFrame histoFrame = null;
-	private JTabbedPane tbhisto = new JTabbedPane();
-	private HistoPanel histoColor = new HistoPanel(Color.BLACK);
-	private HistoPanel histoRed = new HistoPanel(Color.RED);
-	private HistoPanel histoGreen = new HistoPanel(Color.GREEN);
-	private HistoPanel histoBlue = new HistoPanel(Color.BLUE);
+
+	
 
 	/******************************** CLASS' CONSTRUCTOR ***************************************************************************/
 	public Interface() {
@@ -75,7 +85,7 @@ public class Interface {
 
 	/******************************* COMPONENTS' GETTERS *****************************************************************************/
 	/** JFRAME **/
-	private JFrame getJFrame() {
+	public JFrame getJFrame() {
 		if (jFrame == null) {
 			jFrame = new JFrame();
 			jFrame.setSize(new Dimension(600, 500));
@@ -90,7 +100,7 @@ public class Interface {
 	}
 
 	/** CONTENT PANEL **/
-	private JPanel getJContentPane() {
+	public JPanel getJContentPane() {
 		if (jContentPane == null) {
 			jContentPane = new JPanel();
 			jContentPane.setLayout(new BorderLayout());
@@ -111,14 +121,16 @@ public class Interface {
 
 			jscrollpane
 					.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+			jscrollpane.setBorder(new SoftBevelBorder(SoftBevelBorder.LOWERED));
+			jscrollpane.setBackground(Color.lightGray);
 			jscrollpane
-					.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+					.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		}
 		return jscrollpane;
 	}
 
 	/** IMAGE PANEL **/
-	private ImagePanel getJImagePane() {
+	public ImagePanel getJImagePane() {
 		if (jImagePane == null) {
 			jImagePane = new ImagePanel();
 			jImagePane.setBackground(Color.LIGHT_GRAY);
@@ -128,12 +140,16 @@ public class Interface {
 
 	private JPanel getJStatusPanel(){
 		if(jStatusPanel == null){
+			BorderLayout borderLayout = new BorderLayout(5, 5);
+			borderLayout.setHgap(0);
+			borderLayout.setVgap(0);
 			jStatusPanel = new JPanel();
-			jStatusPanel.setBackground(Color.LIGHT_GRAY);
+			jStatusPanel.setLayout(borderLayout);
+			jStatusPanel.setBackground(Color.orange);
 			jStatusPanel.setSize(800, 50);
-			jStatusPanel.setLayout(new BorderLayout(5,5));
+			jStatusPanel.setPreferredSize(new Dimension(570, 65));
 			jStatusPanel.add(getJbTool(), BorderLayout.EAST);
-			jStatusPanel.add(getLbPrintPix(), BorderLayout.WEST);
+			jStatusPanel.add(getLbPrintPix(), BorderLayout.CENTER);
 			
 		}
 		return jStatusPanel;
@@ -144,6 +160,9 @@ public class Interface {
 			jbTool.setPreferredSize(new Dimension(60,60));
 			jbTool.setIcon((new ImageIcon("icon/tools.png")));
 			jbTool.setToolTipText("Tools Box");
+			jbTool.setBackground(new Color(51, 51, 51));
+			jbTool.setForeground(Color.magenta);
+			jbTool.setMnemonic(KeyEvent.VK_SPACE);
 			jbTool.setBorderPainted(true);
 			jbTool.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
@@ -216,18 +235,16 @@ public class Interface {
 			jButtonPrintPix.setToolTipText("Get pixel's color");
 			jButtonPrintPix.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					//jLabelPrintPix.setIsPrinting(!(jLabelPrintPix
-							//.getIsPrinting()));
-					if (jLabelPrintPix.getIsPrinting()) {
+
+					boolean isprinting = jLabelPrintPix.getIsPrinting();
+					if (isprinting) {
 						jLabelPrintPix = new PrintP(jImagePane);
-						jLabelPrintPix.setIsPrinting(!(jLabelPrintPix
-								.getIsPrinting()));
+						jLabelPrintPix.setIsPrinting(false);
 					}
-					else {
-						jLabelPrintPix.setIsPrinting(!(jLabelPrintPix
-							.getIsPrinting()));}
+					else {//jLabelPrintPix.init();
+						jLabelPrintPix.setIsPrinting(true);}
 					
-					System.out.println(jLabelPrintPix.getIsPrinting());
+					
 
 				}
 			});
@@ -289,6 +306,7 @@ public class Interface {
 		if (jLabelPrintPix == null) {
 			jLabelPrintPix = new PrintP(jImagePane);
 			jLabelPrintPix.setIsPrinting(false);
+			jLabelPrintPix.setFont(new Font("Ubuntu", Font.PLAIN, 12));
 		}
 		return jLabelPrintPix;
 	}
@@ -318,10 +336,30 @@ public class Interface {
 		if (helpMenu == null) {
 			helpMenu = new JMenu();
 			helpMenu.setText("Help");
+			helpMenu.add(getMenuItemAbout());
+			
 		}
 		return helpMenu;
 	}
+private JMenuItem getMenuItemAbout(){
+	if (jMenuItemAbout == null) {
+		jMenuItemAbout = new JMenuItem("About");
+		jMenuItemAbout.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ImageIcon icon = new ImageIcon("icon/ghost.png");
+				JOptionPane.showMessageDialog(jMenuItemAbout,
+					    "Picture Playground \n\n Version: 1.0 \n  Mosig Students UJF 2011.  \n \n Contributors : \n \t Ky Nguyen \n \t Zeina AbuAisha, \n \t Wafa Benkaouar",
+					    "About Picture Playground",
+					    JOptionPane.INFORMATION_MESSAGE,
+					    icon);
 
+					return;
+				}}); 
+	}
+	return jMenuItemAbout;
+}
+
+	
 	private JMenuItem getJMenuItem() {
 		if (jMenuItem == null) {
 			jMenuItem = new JMenuItem("Open...");
@@ -346,8 +384,8 @@ public class Interface {
 		public void actionPerformed(ActionEvent ae) {
 			int retval = jFileChooser.showOpenDialog(null);
 			if (retval == jFileChooser.APPROVE_OPTION) {
-				jFileChooser.setAcceptAllFileFilterUsed(false);
-				jFileChooser.addChoosableFileFilter(new ImageFilter());
+				jFileChooser.setFileFilter(new ImageFilter());
+				//jFileChooser.addChoosableFileFilter(new ImageFilter());
 				File file = jFileChooser.getSelectedFile();
 				try {
 					img = ImageIO.read(file);
