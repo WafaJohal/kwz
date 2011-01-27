@@ -2,8 +2,8 @@ import java.io.File;
 
 import javax.swing.filechooser.FileFilter;
 
-	class ImageFilter extends FileFilter {
-		// Accept all directories and all gif, jpg, tiff, or png files.
+public class ImageFilter extends FileFilter {
+		// Accept all gif, jpg, pnm, or png files.
 		public boolean accept(File f) {
 			if (f.isDirectory()) {
 				return true;

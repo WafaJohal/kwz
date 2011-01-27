@@ -69,6 +69,15 @@ public class PrintP extends JPanel implements MouseListener,
 		jlV.setText(" V "
 				+ (-0.148 * c.getRed() - 0.291 * c.getGreen() + 0.439
 						* c.getBlue() + 128));
+	}	public void setNoColor() {
+		jpcolor.setBackground(null);
+		jlRed.setText("");
+		jlBlue.setText("");
+		jlGreen.setText("");
+
+		jlY.setText("");
+		jlU.setText("");
+		jlV.setText("");
 	}
 
 	/*************** INIT() **************************************/
@@ -219,10 +228,11 @@ public class PrintP extends JPanel implements MouseListener,
 			jlycoord.setText(" " + ycoord);
 		else
 			jlycoord.setText("" + ycoord);
-		if (isprinting) {
+		
+		if (getIsPrinting()) {
 			setColor(new Color(imagep.getColorImage().getRGB(xcoord, ycoord)));
 		} else
-			;
+			setNoColor();
 	}
 
 	/********************************************* GETTERS SETTERS ***********************************************************/
