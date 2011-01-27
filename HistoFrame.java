@@ -27,10 +27,10 @@ public class HistoFrame extends JFrame{
 	
 	private void loadImage(ImagePanel jImagePane){
 		
-		histoColor.setImage(jImagePane.getColorImage());
-		histoRed.setImage(jImagePane.getColorImage());
-		histoBlue.setImage(jImagePane.getColorImage());
-		histoGreen.setImage(jImagePane.getColorImage());
+		histoColor.setImage(jImagePane.getCurrentImage());
+		histoRed.setImage(jImagePane.getCurrentImage());
+		histoBlue.setImage(jImagePane.getCurrentImage());
+		histoGreen.setImage(jImagePane.getCurrentImage());
 
 		}
 	

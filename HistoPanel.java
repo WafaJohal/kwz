@@ -1,3 +1,4 @@
+import javax.imageio.ImageIO;
 import javax.swing.*;
 
 import java.awt.*;
@@ -5,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.awt.image.WritableRaster;
+import java.io.File;
 import java.io.IOException;
 
 public class HistoPanel extends JPanel {
@@ -40,7 +42,7 @@ public class HistoPanel extends JPanel {
 	/*** JCOMBOBOX MIN ****/
 	public JComboBox getJCBmin() {
 		if (this.jcbmin == null) {
-			this.cmin = getCountMin();
+			this.cmin = getCountMin(getColor());
 			this.jcbmin = new JComboBox(range);
 			this.jcbmin.setEditable(isEnabled());
 			this.jcbmin.setSelectedItem(cmin);
@@ -56,7 +58,7 @@ public class HistoPanel extends JPanel {
 	/*** JComboBOx MAX ****/
 	public JComboBox getJCBmax() {
 		if (this.jcbmax == null) {
-			this.cmax = getCountMax();
+			this.cmax = getCountMax(getColor());
 			this.jcbmax = new JComboBox(range);
 			this.jcbmax.setEditable(isEnabled());
 			this.jcbmax.setSelectedItem(cmax);
@@ -141,20 +143,20 @@ public class HistoPanel extends JPanel {
 		this.count = count;
 	}
 
-	public int[] getCount() {
+	public int[] getCount(Color color) {
 		if (count == null) {
 			for (int n = 0; n < this.count.length; n++)
 				count[n] = 0;
-			count = countColor(getColor());
+			count = countColor(color);
 		}
 		return this.count;
 	}
 
 	/***** GET ACTUAL MIN *****/
-	public int getCountMin() {
+	public int getCountMin(Color color) {
 		int i;
-		for (i = 0; i < getCount().length; i++) {
-			if (getCount()[i] != 0)
+		for (i = 0; i < getCount(color).length; i++) {
+			if (getCount(color)[i] != 0)
 				return i;
 		}
 
@@ -162,10 +164,10 @@ public class HistoPanel extends JPanel {
 	}
 
 	/***** GET ACTUAL MAX *****/
-	public int getCountMax() {
+	public int getCountMax(Color color) {
 		int i;
-		for (i = getCount().length - 1; i >= 0; i--) {
-			if (getCount()[i] != 0)
+		for (i = getCount(color).length - 1; i >= 0; i--) {
+			if (getCount(color)[i] != 0)
 				return i;
 		}
 
@@ -228,13 +230,25 @@ public class HistoPanel extends JPanel {
 	public JButton getJBEqual() {
 		if (jbequal == null) {
 			jbequal = new JButton("Equalization");
+			if(getColor() == Color.GREEN) jbequal.setText("Green");
 			jbequal.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					histo.repaint(countEq(getColor()),getColor());
+					BufferedImage img;
+					try {
+						img = convertToImage(image, getColor());
+						histo.repaint(countEq(img, getColor()),getColor());
 					Interface in = new Interface();
-					in.getJImagePane().setColorImage(convertToImage(image, getColor()));
+				
+						in.getJImagePane().setCurrentImage(img);
+					
+					
 					in.getJImagePane().repaint();
 					in.getJFrame().setVisible(true);
+					} catch (IOException e2) {
+						// TODO Auto-generated catch block
+						e2.printStackTrace();
+					}
+					
 				} 
 			});
 		}
@@ -264,45 +278,101 @@ public class HistoPanel extends JPanel {
 	/************************************************ SET THE COLOR PIXELS TABLE *********************************/
 
 	public void stretchHisto() {
-		System.out.println("strethisto in");
-		updateMaxHistogram((Integer) jcbmax.getSelectedItem());
-		updateMinHistogram((Integer) jcbmin.getSelectedItem());
-		setImage(getNewStretchTable(this.image, this.cmin, this.cmax,
-				this.newmin, this.newmax));
-		showHistogram(countColor(color));
-		histo.validate();
-		histo.repaint();
+		newmax = (Integer) jcbmax.getSelectedItem();
+		newmin = (Integer) jcbmin.getSelectedItem();
+		
+		image = getNewStretchTable(this.image, getCountMin(getColor()), getCountMax(getColor()),
+				this.newmin, this.newmax, getColor());
+		//histo.repaint(countColor(getColor()),getColor());
+		//histo.validate();
+		//histo.repaint();
 		this.validate();
-		this.repaint();
+		Interface in = new Interface();
+			in.getJImagePane().setCurrentImage(image);
+		in.getJImagePane().repaint();
+		in.getJFrame().setVisible(true);
+		
 
 	}
 
-	public BufferedImage getNewStretchTable(BufferedImage img, Integer cmin,
-			Integer cmax, Integer newmin, Integer newmax) {
-		BufferedImage result = new BufferedImage(img.getWidth(), img
-				.getHeight(), BufferedImage.TYPE_INT_RGB);
-		float quotient = (cmax - cmin) / (newmax - newmin);
+	public BufferedImage getNewStretchTable(BufferedImage img, Integer cmin, Integer cmax, Integer newmin, Integer newmax, Color color) {
+		WritableRaster raster = img.getRaster();
+		
+		float quotient = (newmax - newmin) / (cmax - cmin);
 		int x, y;
+		int rgb, r = 0, g = 0, b = 0;
 		for (x = 0; x < img.getWidth(); x++) {
 			for (y = 0; y < img.getHeight(); y++) {
-				result
-						.setRGB(
-								x,
-								y,
-								(int) (((img.getRGB(x, y) - newmin) * quotient) + cmin));
+				if(color == Color.RED){
+					r = (int)(((new Color(img.getRGB(x, y)).getRed() - cmin) * quotient) + newmin);
+					b = (new Color(img.getRGB(x, y))).getBlue();
+					g = (new Color(img.getRGB(x, y))).getGreen();
+				}
+				else if(color == Color.GREEN){
+					g = (int)(((new Color(img.getRGB(x, y)).getGreen() - cmin) * quotient) + newmin);
+					b = (new Color(img.getRGB(x, y))).getBlue();
+					r = (new Color(img.getRGB(x, y))).getRed();
+				}
+				else if(color == Color.BLUE){
+					b = (int)((((new Color(img.getRGB(x, y)).getBlue()) - cmin) * quotient) + newmin);
+					r = (new Color(img.getRGB(x, y))).getRed();
+					g = (new Color(img.getRGB(x, y))).getGreen();
+					
+				}
+				else{
+					r = (int)((((new Color(img.getRGB(x, y)).getRed() - cmin) * quotient) + newmin));
+					b = (int)((((new Color(img.getRGB(x, y)).getBlue() - cmin) * quotient) + newmin));
+					g = (int)((((new Color(img.getRGB(x, y)).getGreen() - cmin) * quotient) + newmin));
+					if((new Color(img.getRGB(x, y)).getRed() ==cmin)) System.out.println("yes red!");
+					if((new Color(img.getRGB(x, y)).getGreen() ==cmin)) System.out.println("yes green!");
+					if((new Color(img.getRGB(x, y)).getBlue() ==cmin)) System.out.println("yes blue!");
+				}
+				rgb = new Color(r, g, b).getRGB();
+				raster.setSample(x,y,0,rgb);
 			}
 		}
 
-		return result;
+		return img;
 	}
 
-	public void updateMaxHistogram(Integer max) {
-		this.newmax = max;
+	public int getMinRed(BufferedImage img){
+		int r = new Color(img.getRGB(0, 0)).getRed();
+		int x, y;
+		for(x = 1; x<img.getWidth(); x++){
+			for(y = 1 ;y<img.getHeight(); y++){
+			if(r > new Color(img.getRGB(x, y)).getRed() ) 
+				r = new Color(img.getRGB(x, y)).getRed();
+		}}
+		return r;
+	}
+	public int getMinGreen(BufferedImage img){
+		int r = new Color(img.getRGB(0, 0)).getGreen();
+		int x, y;
+		for(x = 1; x<img.getWidth(); x++){
+			for(y = 1 ;y<img.getHeight(); y++){
+			if(r>new Color(img.getRGB(x, y)).getGreen() ) r = new Color(img.getRGB(x, y)).getGreen();
+		}}
+		return r;
+	}
+	public int getMinBlue(BufferedImage img){
+		int r = new Color(img.getRGB(0, 0)).getBlue();
+		int x, y;
+		for(x = 1; x<img.getWidth(); x++){
+			for(y = 1 ;y<img.getHeight(); y++){
+			if(r>new Color(img.getRGB(x, y)).getBlue() ) r = new Color(img.getRGB(x, y)).getBlue();
+		}}
+		return r;
+	}
+	public int getMinRGB(BufferedImage img){
+		int r = img.getRGB(0, 0);
+		int x, y;
+		for(x = 1; x<img.getWidth(); x++){
+			for(y = 1 ;y<img.getHeight(); y++){
+			if(r>img.getRGB(x, y) ) r = img.getRGB(x, y);
+		}}
+		return r;
 	}
 
-	public void updateMinHistogram(Integer min) {
-		this.newmin = min;
-	}
 
 	/*********************************************** COUNT THE NUMBER OF PIXELS WITH THE SAME VALUE ********************************/
 	public int[] countColor(Color color) {
@@ -316,12 +386,12 @@ public class HistoPanel extends JPanel {
 					if (red <= 255 && red >= 0)
 						count[red]++;
 				}
-				if (color == Color.BLUE) {
+				else if (color == Color.BLUE) {
 					int blue = (new Color(image.getRGB(x, y))).getBlue();
 					if (blue <= 255 && blue >= 0)
 						count[blue]++;
 				}
-				if (color == Color.GREEN) {
+				else if (color == Color.GREEN) {
 					int green = (new Color(image.getRGB(x, y))).getGreen();
 					if (green <= 255 && green >= 0)
 						count[green]++;
@@ -339,20 +409,19 @@ public class HistoPanel extends JPanel {
 		/*******NEW VALUES OF THE HISTOGRAM AFTER EQUALIZATION*******/
 		private int h[] = new int[256];
 
-		private int[] countEq(Color c) {
-			setImage(getImage());
+		private int[] countEq(BufferedImage img, Color c) {
 			float[] eq;
 			if(c == Color.RED){			
-			 eq = RedEq(image);
+			 eq = RedEq(img);
 			return histogram(eq);}
 			else if(c == Color.GREEN){			
-				 eq = GreenEq(image);
+				 eq = GreenEq(img);
 				return histogram(eq);}
 			else if(c == Color.BLUE){			
-				 eq = BlueEq(image);
+				 eq = BlueEq(img);
 				return histogram(eq);}
 			else{
-				 eq = GrayEq(image);
+				 eq = GrayEq(img);
 				 return histogram(eq);
 				}
 			}
@@ -363,26 +432,6 @@ public class HistoPanel extends JPanel {
 	/*******************************************************************************************************************************/
 	
 
-	
-	
-	//Return a table representative of the pixels of the image (x,y) -> RGB[x][y]
-	public int[][] getRGB(BufferedImage buf) {
-		int width = buf.getWidth();
-		int height = buf.getHeight();
-		int size = width * height;
-		int c = 0, counter = 0;
-		int [][] rgb = new int[3][size];
-		for(int i = 0; i<width; i++){
-			for(int j = 0; j<height ; j++){
-				c = buf.getRGB(i,j);
-				rgb[0][counter] = (c&0x00ff0000)>>16;
-				rgb[1][counter] = (c&0x0000ff00)>>8;
-				rgb[2][counter] = c&0x000000ff;
-				counter++;
-			}
-		}
-		return rgb;
-	}
 	//put in an array the RGB value of each pixel
 	public float [] RGB2GS (BufferedImage buf){
 		int width = buf.getWidth();
@@ -513,12 +562,11 @@ public class HistoPanel extends JPanel {
 		int min = getMinCDF(cdf);
 		float e [] = new float[256];
 		for(int i = 0; i<256; i++){
-			e[i] = (float)((((float)cdf[i]-min)/(float)size)*255);
-		}
-        for(int i = 0; i<256; i++){
-            if(e[i]<0) e[i]=0;
+			e[i] = Math.round((float)((((float)cdf[i]-min)/((float)size))*255));
+		if(e[i]<0) e[i]=0;
             if(e[i]>255) e[i]=255;
-        }
+            }
+       
 		return e;
 	}
  	
@@ -540,7 +588,7 @@ public class HistoPanel extends JPanel {
 	}
 	public float[] RedEq(BufferedImage img){
 		float[] red = Red(img);
-		int[] histoRed = histogram(red);
+		int[] histoRed = countColor(Color.RED);
 		int[] cdfRed = getCDF(histoRed);
 		float[] equalizationRed = equalization(cdfRed);
 		return picEqualized(red, equalizationRed);
@@ -548,7 +596,7 @@ public class HistoPanel extends JPanel {
 	}
 	public float[] GreenEq(BufferedImage img){
 		float[] green = Green(img);
-		int[] histoGreen = histogram(green);
+		int[] histoGreen = countColor(Color.GREEN);
 		int[] cdfGreen = getCDF(histoGreen);
 		float[] equalizationGreen = equalization(cdfGreen);
 		return picEqualized(green, equalizationGreen);
@@ -556,15 +604,13 @@ public class HistoPanel extends JPanel {
 	}
 	public float[] BlueEq(BufferedImage img){
 		float[] blue = Blue(img);
-		int[] histoBlue = histogram(blue);
+		int[] histoBlue = countColor(Color.BLUE);
 		int[] cdfBlue = getCDF(histoBlue);
 		float[] equalizationBlue = equalization(cdfBlue);
 		return picEqualized(blue, equalizationBlue);
 		
 	}
 	public float[] GrayEq(BufferedImage img){
-	
-		
 		float[] gs = RGB2GS(img);
 		int[] histoGs = histogram(gs);
 		int[] cdfGs = getCDF(histoGs);
@@ -572,44 +618,51 @@ public class HistoPanel extends JPanel {
 		return picEqualized(gs, equalizationGs);
 	}
 	
-	public BufferedImage convertToImage(BufferedImage img, Color c){
+	public BufferedImage convertToImage(BufferedImage img, Color c) throws IOException{
 	int width = img.getWidth();
 	int height = img.getHeight();
 	int x, y; 
-	BufferedImage imgeq = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_RGB);
-	  WritableRaster raster = imgeq.getRaster();
+	int counter = 0;
+	
+	  WritableRaster raster = img.getRaster();
 	for(x = 0; x<width; x++){
 		for(y = 0; y<height ; y++){
 			if(c == Color.RED){//apply the equalization on Red
 				
 				int b = new Color(img.getRGB(x, y)).getBlue();
 				int g = new Color(img.getRGB(x, y)).getGreen();
-				Color col = new Color((int)RedEq(img)[x+y],g,b);
-				
+				Color col = new Color((int)RedEq(img)[counter],g,b);
+				System.out.println(col.getRGB());
 				
 				raster.setSample(x, y, 0, col.getRGB());
-				//img.setRGB(x, y, col.getRGB());
+				counter++;
 			}
 			else if(c == Color.GREEN){
 				int b = new Color(img.getRGB(x, y)).getBlue();
 				int r = new Color(img.getRGB(x, y)).getRed();
-				Color col = new Color(r,GreenEq(img)[x+y],b);
+				Color col = new Color(r,(int)GreenEq(img)[counter],b);
 				raster.setSample(x, y, 0, col.getRGB());
+				
+				counter++;
 			}
 			else if(c == Color.BLUE){
 				int g = new Color(img.getRGB(x, y)).getGreen();
 				int r = new Color(img.getRGB(x, y)).getRed();
-				Color col = new Color(r,g,BlueEq(img)[x+y]);
+				Color col = new Color(r,g,(int)BlueEq(img)[counter]);
 				raster.setSample(x, y, 0, col.getRGB());
+				counter++;
 			}
 			else{
-				Color col = new Color((int)GrayEq(img)[x+y]);
+				Color col = new Color((int)GrayEq(img)[counter]);
 				raster.setSample(x, y, 0, col.getRGB());
+				System.out.println(col.getRGB());
+				counter++;
 			}
 			
 		}
 	}
-	return imgeq;
+	
+	return img;
 	}
 
 

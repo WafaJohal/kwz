@@ -206,18 +206,20 @@ public class ImagePanel extends JPanel implements MouseListener, MouseMotionList
                 
                         this.x1 = evt.getX();
                         this.y1 = evt.getY();
+                        if(getCurrentImage() != null){
                         if(x1<0 || y1<0 || x1 > currentImage.getWidth()|| y1 > currentImage.getHeight())
                         {
                                 x1 = 0;
                                 y1 = 0;
                                 isCropping = false;
-                        }
+                        }}
             }
             
             @Override
             public void mouseDragged(MouseEvent evt) {
                 // TODO Auto-generated method stub
-                if(isIncrease == false)
+            	   if(getCurrentImage() != null){
+            	if(isIncrease == false)
                 {
                         if (isDecrease ==false)
                         {
@@ -248,19 +250,19 @@ public class ImagePanel extends JPanel implements MouseListener, MouseMotionList
                         this.y2 = evt.getY();
                         isDecrease = false;
                         this.repaint();
-                }
+                }}
             }
 
             @Override
             public void mouseReleased(MouseEvent evt) {
-                // TODO Auto-generated method stub
+            	   if(getCurrentImage() != null){
                 this.isCropping = false;
                 // This is the method a wrote in the other snippet 
                 if( x1 != 0 && y1!= 0 && x2< currentImage.getWidth() && y2<currentImage.getHeight())
                 {
                                 BufferedImage cropped = crop(currentImage, new Rectangle(Math.min(x1, x2), Math.min(y1, y2), Math.max(x1, x2), Math.max(y1, y2)));
                                 this.currentImage = cropped;
-                }
+                }}
             }
             /*==================================================CROP IMAGE========================================================================================================================================
              * =======================================================================================================================================================================================================*/

@@ -101,13 +101,13 @@ public class PrintP extends JPanel implements MouseListener,
 		this.add(jptit, BorderLayout.NORTH);
 		
 		JPanel jp1 = new JPanel(new GridLayout(1,4, 10, 10));
-		jp1.setBackground(Color.orange);
+		jp1.setBackground(Color.gray);
 		jp1.setPreferredSize(new Dimension(500, 50));
 		this.jpcolor = new JPanel();
 		this.jpcolor.setSize(this.getWidth(), this.getHeight() / 4);
 		this.jpcolor.setBorder(BorderFactory.createLineBorder(Color.black, 1));
 
-		jpcolor.setBackground(new Color(255, 255, 153));
+		jpcolor.setBackground(Color.LIGHT_GRAY);
 		this.jpRGB = new JPanel();
 		this.jpYUV = new JPanel();
 
@@ -116,9 +116,9 @@ public class PrintP extends JPanel implements MouseListener,
 		this.jlRGB = new JLabel("RGB");
 
 		jpYUV.setLayout(new BoxLayout(jpYUV, BoxLayout.PAGE_AXIS));
-		jpYUV.setBackground(new Color(255, 255, 153));
+		jpYUV.setBackground(Color.LIGHT_GRAY);
 		jpRGB.setLayout(new BoxLayout(jpRGB, BoxLayout.PAGE_AXIS));
-		jpRGB.setBackground(new Color(255, 255, 153));
+		jpRGB.setBackground(Color.LIGHT_GRAY);
 		this.jlRed = new JLabel();
 		this.jlGreen = new JLabel();
 		this.jlBlue = new JLabel();
@@ -132,13 +132,15 @@ public class PrintP extends JPanel implements MouseListener,
 		jlx = new JLabel();
 		jly = new JLabel();
 		jlxcoord = new JLabel();
-		jlxcoord.setBackground(new Color(255, 255, 153));
+		jlxcoord.setForeground(new Color(204, 204, 204));
 		jlycoord = new JLabel();
+		jlycoord.setForeground(new Color(204, 204, 204));
 		jlx.setText("x :");
+		jlx.setForeground(new Color(204, 204, 204));
 		jly.setText("y :");
-		jly.setBackground(new Color(204, 255, 153));
+		jly.setForeground(new Color(204, 204, 204));
 		jp.setLayout(new GridLayout(2, 4));
-		jp.setBackground(Color.orange);
+		jp.setBackground(Color.DARK_GRAY);
 		jp.add(jlx);
 		jp.add(new JLabel());
 		jp.add(jly);
@@ -230,7 +232,7 @@ public class PrintP extends JPanel implements MouseListener,
 			jlycoord.setText("" + ycoord);
 		
 		if (getIsPrinting()) {
-			setColor(new Color(imagep.getColorImage().getRGB(xcoord, ycoord)));
+			setColor(new Color(imagep.getCurrentImage().getRGB(xcoord, ycoord)));
 		} else
 			setNoColor();
 	}

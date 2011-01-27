@@ -97,7 +97,7 @@ public class LaplaceFilter extends AbstractBufferedImageOp {
                 return "Edges/Laplace...";
         }
         
-        public static void main(String[] args) throws IOException  {
+        /*public static void main(String[] args) throws IOException  {
                 
 
             LaplaceFilter lf = new LaplaceFilter();
@@ -112,5 +112,5 @@ public class LaplaceFilter extends AbstractBufferedImageOp {
         System.out.println("success");
         
         
-}
+}*/
 }
