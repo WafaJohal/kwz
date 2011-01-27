@@ -429,9 +429,9 @@ public class Interface extends Applet {
                         jJMenuBar = new JMenuBar();
                         jJMenuBar.setPreferredSize(new Dimension(0, 20));
                         jJMenuBar.add(getFileMenu());
-                        jJMenuBar.add(getHelpMenu());
                         jJMenuBar.add(getApplyMenu());
                         jJMenuBar.add(getKernelMenu());
+                        jJMenuBar.add(getHelpMenu());
                         
                 }
                 return jJMenuBar;
@@ -454,7 +454,7 @@ public class Interface extends Applet {
           private JMenu getApplyMenu() {
                         if (applyMenu == null) {
                                 applyMenu = new JMenu();
-                                applyMenu.setText("Apply");
+                                applyMenu.setText("Filters");
 
                                 applyMenu.add(getJMenuItem2());
                                 applyMenu.add(getJMenuItem21());
@@ -892,12 +892,13 @@ private JMenuItem getJMenuItemExit() {
                 public void actionPerformed(ActionEvent ae) {
             int[] value;  
                 InputKernel in = new InputKernel(9);
-          in.setSize(300,300);
+          in.setSize(200,200);
+          in.setLocationRelativeTo(null);
           in.setVisible(true);
           value = in.getInput();
-          for(int i = 0; i<9;i++)
+         /* for(int i = 0; i<9;i++)
                   System.out.println( value[i]);
-                        
+                        */
                         
                         
                 }

@@ -73,7 +73,9 @@ public class HistoPanel extends JPanel {
 	/*** JBUTTON APPLY STRETCHING ****/
 	public JButton getJbStretch() {
 		if (this.jbStretching == null) {
-			this.jbStretching = new JButton(" Apply Stretching !");
+
+			this.jbStretching = new JButton(" Apply Stretching");
+			this.jbStretching.setFont(new Font("Ubuntu", Font.BOLD, 14));
 			this.jbStretching.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					newmax = (Integer) jcbmax.getSelectedItem();
@@ -115,9 +117,13 @@ public class HistoPanel extends JPanel {
 		if (this.jppstretch == null) {
 			this.jppstretch = new JPanel();
 			this.jppstretch.setLayout(new GridLayout(4, 1));
-			this.jppstretch.add(new JLabel("Min Range"));
+			JLabel jmin = new JLabel("Min Range");
+			JLabel jmax = new JLabel("Max Range");
+			jmin.setFont(new Font("Ubuntu", Font.BOLD, 14));
+			jmax.setFont(new Font("Ubuntu", Font.BOLD, 14));
+			this.jppstretch.add(jmin);
 			this.jppstretch.add(getJCBmin());
-			this.jppstretch.add(new JLabel("Max Range"));
+			this.jppstretch.add(jmax);
 			this.jppstretch.add(getJCBmax());
 		}
 		return this.jppstretch;
@@ -128,8 +134,8 @@ public class HistoPanel extends JPanel {
 		if (this.jpstretch == null) {
 			this.jpstretch = new JPanel(new BorderLayout());
 			this.jpstretch.add(getJPPSlider(), BorderLayout.CENTER);
-			this.jpstretch.add(getJbStretch(), BorderLayout.SOUTH);
-			this.jpstretch.add(getJBEqual(), BorderLayout.EAST);
+			this.jpstretch.add(getJbStretch(), BorderLayout.EAST);
+			this.jpstretch.add(getJBEqual(), BorderLayout.WEST);
 		}
 		return this.jpstretch;
 	}
@@ -229,8 +235,10 @@ public class HistoPanel extends JPanel {
 	/****** JBUTTON EQUALIZATION *********/
 	public JButton getJBEqual() {
 		if (jbequal == null) {
+			
 			jbequal = new JButton("Equalization");
-			if(getColor() == Color.GREEN) jbequal.setText("Green");
+			jbequal.setFont(new Font("Ubuntu", Font.BOLD, 14));
+			jbequal.setToolTipText("Equalization");
 			jbequal.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					BufferedImage img;
@@ -323,9 +331,7 @@ public class HistoPanel extends JPanel {
 					r = (int)((((new Color(img.getRGB(x, y)).getRed() - cmin) * quotient) + newmin));
 					b = (int)((((new Color(img.getRGB(x, y)).getBlue() - cmin) * quotient) + newmin));
 					g = (int)((((new Color(img.getRGB(x, y)).getGreen() - cmin) * quotient) + newmin));
-					if((new Color(img.getRGB(x, y)).getRed() ==cmin)) System.out.println("yes red!");
-					if((new Color(img.getRGB(x, y)).getGreen() ==cmin)) System.out.println("yes green!");
-					if((new Color(img.getRGB(x, y)).getBlue() ==cmin)) System.out.println("yes blue!");
+				
 				}
 				rgb = new Color(r, g, b).getRGB();
 				raster.setSample(x,y,0,rgb);

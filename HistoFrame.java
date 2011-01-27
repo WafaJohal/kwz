@@ -1,5 +1,6 @@
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -44,10 +45,14 @@ public class HistoFrame extends JFrame{
 	private void group(){
 		
 		tbhisto.setPreferredSize(new Dimension(500, 400));
-		tbhisto.addTab("Color Histogram", histoColor);
-		tbhisto.addTab("Red scale", histoRed);
-		tbhisto.addTab("Green scale", histoGreen);
-		tbhisto.addTab("Blue scale", histoBlue);
+		tbhisto.setFont(new Font("Ubuntu", Font.BOLD, 14));
+		tbhisto.addTab("RGB", histoColor);
+		tbhisto.addTab("Red", histoRed);
+		tbhisto.addTab("Green", histoGreen);
+		tbhisto.addTab("Blue", histoBlue);
+		this.setIconImage(new ImageIcon("icon/histos.png").getImage());
+		this.setTitle("Histograms");
+		this.setFont(new Font("Ubuntu", Font.BOLD, 14));
 		this.add(tbhisto);
 		}
 	/*public void main(String args[])throws IOException {

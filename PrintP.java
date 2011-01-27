@@ -14,6 +14,7 @@ import javax.swing.JPanel;
 import java.awt.FlowLayout;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
+import java.awt.Font;
 
 public class PrintP extends JPanel implements MouseListener,
 		MouseMotionListener {
@@ -93,8 +94,10 @@ public class PrintP extends JPanel implements MouseListener,
 		this.setLayout(new BorderLayout());
 		this.jlcoordTitle = new JLabel("Coordinates");
 		jlcoordTitle.setForeground(new Color(204, 204, 204));
+		jlcoordTitle.setFont(new Font("Ubuntu", Font.BOLD, 14));
 		this.jlcolorTitle = new JLabel("Colors");
 		jlcolorTitle.setForeground(new Color(204, 204, 204));
+		jlcolorTitle.setFont(new Font("Ubuntu", Font.BOLD, 14));
 		jptit.setLayout(gridLayout);
 		jptit.add(jlcoordTitle, null);
 		jptit.add(jlcolorTitle, null);
@@ -119,7 +122,7 @@ public class PrintP extends JPanel implements MouseListener,
 		jpYUV.setBackground(Color.LIGHT_GRAY);
 		jpRGB.setLayout(new BoxLayout(jpRGB, BoxLayout.PAGE_AXIS));
 		jpRGB.setBackground(Color.LIGHT_GRAY);
-		this.jlRed = new JLabel();
+				this.jlRed = new JLabel();
 		this.jlGreen = new JLabel();
 		this.jlBlue = new JLabel();
 		this.jlY = new JLabel();
