@@ -638,7 +638,7 @@ public class HistoPanel extends JPanel {
 				int b = new Color(img.getRGB(x, y)).getBlue();
 				int g = new Color(img.getRGB(x, y)).getGreen();
 				Color col = new Color((int)RedEq(img)[counter],g,b);
-				System.out.println(col.getRGB());
+			
 				
 				raster.setSample(x, y, 0, col.getRGB());
 				counter++;
@@ -661,7 +661,7 @@ public class HistoPanel extends JPanel {
 			else{
 				Color col = new Color((int)GrayEq(img)[counter]);
 				raster.setSample(x, y, 0, col.getRGB());
-				System.out.println(col.getRGB());
+				
 				counter++;
 			}
 			
